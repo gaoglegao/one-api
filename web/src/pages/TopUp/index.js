@@ -33,7 +33,34 @@ const TopUp = () => {
       showError('超级管理员未设置充值链接！');
       return;
     }
-    window.open(topUpLink, '_blank');
+	
+	
+	
+    //window.open(topUpLink, '_blank');
+	
+	try {
+        // 发送请求获取 URL
+        const response = await fetch('https://us-central1-lululandgenesis.cloudfunctions.net/createPaymentLink');
+
+        // 检查响应状态
+        if (!response.ok) {
+            throw new Error('无法获取支付链接');
+        }
+
+        // 解析响应数据
+        const data = await response.json();
+        const url = data?.url;
+
+        if (!url) {
+            throw new Error('获取的支付链接无效');
+        }
+
+        // 打开新窗口进行跳转
+        window.open(url, '_blank');
+    } catch (error) {
+        // 显示错误信息
+        showError(error.message);
+    }
   };
 
   const getUserQuota = async ()=>{
